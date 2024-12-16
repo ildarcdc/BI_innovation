@@ -1,0 +1,10 @@
+ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
+ETCD_LISTEN_PEER_URLS="http://{{ hostvars[inventory_hostname]['ansible_host'].split(':')[0] }}:2380,"
+ETCD_LISTEN_CLIENT_URLS="http://{{ hostvars[inventory_hostname]['ansible_host'].split(':')[0] }}:2379,"
+ETCD_NAME="{{ hostvars[inventory_hostname]['name'] }}"
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://{{ hostvars[inventory_hostname]['ansible_host'].split(':')[0] }}:2380"
+ETCD_ADVERTISE_CLIENT_URLS="http://{{ hostvars[inventory_hostname]['ansible_host'].split(':')[0] }}:2379"
+ETCD_INITIAL_CLUSTER="{% for host in groups['etcd_clusters'] %}{{ hostvars[inventory_hostname]['name'] }}=http://{{ hostvars[host]['ansible_host'] }}:2380{% if not loop.last %},{% endif %}{% endfor %}"
+ETCD_INITIAL_CLUSTER_TOKEN="{{ etcd_cluster_token }}"
+ETCD_INITIAL_CLUSTER_STATE="new"
+

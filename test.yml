@@ -1,0 +1,9 @@
+---
+- hosts: all
+  remote_user: ansible
+  become: true
+  tasks:
+    - name: Check
+      shell: df -h | grep /dev/sda1
+      become: yes
+      

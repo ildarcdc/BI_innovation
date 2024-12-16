@@ -1,0 +1,7 @@
+- hosts: pg-slaves
+  gather_facts: yes
+  tasks:
+   - name: Restart again patroni service for pg_hba.conf
+     become: yes
+     shell: |
+      systemctl restart patroni

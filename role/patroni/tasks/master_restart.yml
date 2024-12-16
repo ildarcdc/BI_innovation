@@ -1,0 +1,20 @@
+- hosts: pg_master
+  gather_facts: no
+  tasks:
+
+  - name: Enable postgres user to login to pg_hba.conf
+    become: yes
+    blockinfile:
+      path: /var/lib/pgsql/15/data/pg_hba.conf
+      block: |
+        {% for host in groups['servers'] %}
+        host    replication     replica     {{ host }}/32    md5
+        host    all             postgres    {{ host }}/32    md5 
+        host    all             svc_monitoring    {{ host }}/32    md5
+        host    all             test_user   {{ host }}/32    md5
+        local   all             all                          trust
+        {% endfor %}
+
+  - name: Restart again patroni service for pg_hba.conf
+    shell: |
+      systemctl restart patroni

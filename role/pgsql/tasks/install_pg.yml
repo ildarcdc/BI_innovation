@@ -1,0 +1,53 @@
+---
+  - name: Install dependencies
+    become: yes
+    dnf:
+      name:
+        - python3-pip
+        - gcc
+        - epel-release
+        - python3-devel
+      state: present
+      
+  - name: Install pip packages
+    become: yes
+    pip:
+      name: 
+        - psycopg2==2.7.6
+ 
+  - name: Install PG server
+    become: true
+    shell: |
+       dnf update -y
+       dnf -qy module disable postgresql
+       dnf --repo pgdg15 install postgresql"{{ release_version }}-server.x86_64" -y
+    
+        
+  - name: Install Sub packages
+    become: yes
+    dnf:
+      name:
+        - "postgresql{{ release_version }}-contrib"
+        - "postgresql{{ release_version }}-plpython3"
+      state: present
+
+  - name: Install pg-repack package
+    become: yes
+    dnf:
+      name: "pg_repack_{{ release_version }}"
+      state: present
+
+  - name: Enable postgresql-15 service
+    become: yes
+    systemd:
+      name: "postgresql-{{release_version}}"
+      state: stopped
+
+
+  -  name: Install packages with pip3
+     become: yes
+     shell: | 
+            pip3 install urllib3==1.23
+            pip3 install requests
+            pip3 install --upgrade setuptools
+            pip3 install python-etcd

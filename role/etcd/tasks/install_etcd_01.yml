@@ -1,0 +1,74 @@
+  - name: set hosts file
+    become: yes
+    blockinfile:
+      path: /etc/hosts
+      block: |
+        {{ etcd01 }}
+        {{ pgsql01 }}
+        {{ pgsql02 }}
+        
+  - name: Install dependencies
+    become: yes
+    dnf:
+      name:
+        - python3-pip
+        - gcc
+        - epel-release
+        - python3-devel
+        - curl
+        - wget
+      state: present
+
+  - name: Install etcd
+    become: yes
+    shell: |
+      wget  https://github.com/etcd-io/etcd/releases/download/v3.5.15/etcd-v3.5.15-linux-amd64.tar.gz
+      tar xvf etcd-v3.5.15-linux-amd64.tar.gz
+      cd etcd-v3.5.15-linux-amd64.tar.gz
+      mv etcd-v3.5.15-linux-amd64/etcd* /usr/bin
+	  groupadd --system etcd
+	  useradd -s /sbin/nologin --system -g etcd etcd
+      etcd --version
+      mkdir -p /var/lib/etcd /etc/etcd/.tls
+      chown -R etcd:etcd /var/lib/etcd /etc/etcd
+	  chmod 0775 /var/lib/etcd/
+      chmod +x generate_etcd_certs.sh
+      sudo ./generate_etcd_certs.sh
+      chown -R etcd:etcd /etc/etcd/.tls
+      chmod -R 744 /etc/etcd/.tls
+      chmod 600 /etc/etcd/.tls/*.key
+      chmod +x /shared/generate_etcd_certs.sh
+      sudo ./generate_etcd_certs.sh
+    
+  - name: Create a etcd service
+    become: yes
+    copy:
+      src: ../templates/etcd.service
+      remote_src: False
+      dest: /etc/systemd/system/etcd.service
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Configure etcd
+    become: yes
+    template:
+      src: ../templates/test.yml.j2
+      dest: /etc/etcd/etcd.conf.yml
+      owner: etcd
+      group: etcd
+      mode: 0640
+
+
+  - name: Enable and start etcd
+    become: yes
+    service:
+      name: etcd.service
+      enabled: true
+      state: started
+
+  - name: Wait for 20 seconds
+    pause:
+     seconds: 20
+     
+  

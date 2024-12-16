@@ -1,0 +1,53 @@
+  - name: Install patroni package
+    become: yes
+    yum:
+      name: patroni
+      state: present
+
+
+  - name: Create patroni configuration directory
+    become: yes
+    file:
+      path: /etc/patroni
+      state: directory
+      mode: 755
+
+  - name: Find patroni directory
+    find:
+      paths: /usr/share/doc/
+      file_type: directory
+      patterns: patroni*
+    register: result
+
+  - name: Copy patroni.yml file
+    become: yes
+    copy:
+      src: "{{ result.files[0].path }}/postgres0.yml"
+      dest: /etc/patroni/patroni.yml
+      remote_src: yes
+      mode: 644
+    when: result.files | length > 0
+
+  - name: Create patroni log directory
+    become: yes
+    file:
+      path: /var/log/patroni
+      state: directory
+      owner: postgres
+      group: postgres
+      mode: 755
+
+  - name: Rename patroni.yml file
+    become: yes
+    shell: |
+      cd  /etc/patroni/
+      mv /etc/patroni/patroni.yml /etc/patroni/patroni_old.yml
+
+  - name: Configure Patroni
+    become: yes
+    template:
+      src: templates/patroni.yml.j2
+      dest: /etc/patroni/patroni.yml
+      owner: postgres
+      group: postgres
+      mode: 0640

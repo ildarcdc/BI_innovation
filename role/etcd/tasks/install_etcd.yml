@@ -1,0 +1,86 @@
+  - name: set hosts file
+    become: yes
+    blockinfile:
+      path: /etc/hosts
+      block: |
+        {{ etcd01 }}
+        {{ pgsql01 }}
+        {{ pgsql02 }}
+        
+  - name: Install dependencies
+    become: yes
+    dnf:
+      name:
+        - python3-pip
+        - gcc
+        - epel-release
+        - python3-devel
+        - curl
+        - wget
+      state: present
+
+  - name: Install etcd
+    become: yes
+    shell: |
+      wget https://github.com/etcd-io/etcd/releases/download/v3.5.0/etcd-v3.5.0-linux-amd64.tar.gz
+      tar xvf etcd-v3.5.0-linux-amd64.tar.gz
+      cd etcd-v3.5.0-linux-amd64
+      mv etcd etcdctl /usr/local/bin/
+      etcd --version
+      mkdir -p /etc/etcd
+      mkdir -p /var/lib/etcd
+      
+  - name: Create etcd user
+    become: yes
+    shell: |
+      groupadd --system etcd
+      useradd -s /sbin/nologin --system -g etcd etcd
+      chown -R etcd:etcd /var/lib/etcd/ /etc/etcd/
+      chmod 0775 /var/lib/etcd/
+    
+#  - name: Create a etcd service
+#    become: yes
+#    copy:
+#      src: ../templates/etcd.service.j2
+#      remote_src: False
+#      dest: /etc/systemd/system/etcd.service
+#      dest: /tmp/etcd.service
+#      owner: etcd
+#      group: etcd
+#      mode: 0775
+      
+  - name: Configure etcd
+    become: yes
+    template:
+      src: ../templates/etcd.service.j2
+      dest: /etc/systemd/system/etcd.service
+      owner: etcd
+      group: etcd
+      mode: 0775
+
+  - name: Configure etcd
+    become: yes
+    template:
+      src: ../templates/etcd.conf.j2
+      dest: /etc/etcd/etcd.conf
+      owner: etcd
+      group: etcd
+      mode: 0775
+  
+  - name: Reload systemd daemon
+    become: yes
+    shell: |
+      systemctl daemon-reload    
+
+  - name: Enable and start etcd
+    become: yes
+    service:
+      name: etcd.service
+      enabled: true
+      state: started
+
+  - name: Wait for 30 seconds
+    pause:
+     seconds: 30
+     
+  

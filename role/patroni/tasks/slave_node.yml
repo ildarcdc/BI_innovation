@@ -1,0 +1,10 @@
+---
+- hosts: pg_slaves
+  gather_facts: no
+  tasks:
+  - name: Start patroni on the  nodes
+    become: yes
+    systemd:
+      name: patroni
+      state: started
+      enabled: yes

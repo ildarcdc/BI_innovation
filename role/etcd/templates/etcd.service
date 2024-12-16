@@ -1,0 +1,29 @@
+[Unit]
+Description=etcd - highly-available key value store
+Documentation=https://github.com/coreos/etcd
+Documentation=man:etcd
+After=network.target
+Wants=network-online.target
+[Unit]
+Description=Etcd Server
+After=network.target
+After=network-online.target
+Wants=network-online.target
+  
+[Service]
+Type=notify
+WorkingDirectory=/var/lib/etcd/default
+EnvironmentFile=-/etc/etcd/etcd.conf
+User=etcd
+# set GOMAXPROCS to number of processors
+ExecStart=/bin/bash -c "GOMAXPROCS=$(nproc) /usr/local/bin/etcd"
+Restart=on-failure
+LimitNOFILE=65536
+IOSchedulingClass=realtime
+IOSchedulingPriority=0
+Nice=-20
+ 
+[Install]
+WantedBy=multi-user.target
+
+

@@ -1,0 +1,28 @@
+- hosts: pg_cluster
+  roles:
+    - { role: pgsql, tags: ["pg_cluster"] } 
+ 
+- hosts: patroni_cluster
+  roles:
+    - { role: patroni, tags: ["patroni_cluster"] }
+
+- hosts: pg_master
+  roles:
+    - { role: master_node, tags: ["pg_master"] }
+
+- hosts: pg_slaves
+  roles:
+    - { role: slave_node, tags: ["pg_slaves"] }
+
+- hosts: etcd_cluster
+  roles:
+    - { role: etcd, tags: ["etcd_cluster"] }
+    
+- hosts: pg_master
+  roles:
+    - { role: master_restart, tags: ["pg_master"] }
+    
+- hosts: pg_slaves
+  roles:
+    - { role: slave_restart, tags: ["pg_slaves"] }
+    

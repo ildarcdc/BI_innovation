@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"C:/vagrant/vagrant_multi","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}},"virtualbox":{"/shared":{"owner":"root","group":"root","guestpath":"/shared","hostpath":"C:/vagrant/vagrant_multi","disabled":false,"__vagrantfile":true}}}
