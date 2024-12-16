@@ -4,10 +4,8 @@ restapi:
   listen: 0.0.0.0:8008
   connect_address: {{ hostvars[inventory_hostname]['ansible_host'].split(':')[0] }}:8008
 etcd3:
-  host: 
-  - {{ groups['servers'][0] }}:2379
-  - {{ groups['servers'][1] }}:2379
-  - {{ groups['servers'][2] }}:2379
+  host: ["{{ groups['servers'][0] }}:2379", "{{ groups['servers'][1] }}:2379", "{{ groups['servers'][2] }}:2379"]
+  protocol: http
 
 bootstrap:
   dcs:
@@ -56,20 +54,20 @@ bootstrap:
         log_checkpoints : "on"
         log_temp_files : 0
         shared_preload_libraries: pg_stat_statements, pg_repack
-initdb:
-  - encoding: UTF8
-  - data-checksums
-pg_hba:
-  - host replication replica 127.0.0.1/32 md5
-  - host replication replica {{ groups['servers'][1] }}/32 md5
-  - host replication replica {{ groups['servers'][2] }}/32 md5
-  - host all all 0.0.0.0/0 md5
-users:
-  admin:
-    password: admin
-    options:
-      - createrole
-      - createdb
+  initdb:
+    - encoding: UTF8
+    - data-checksums
+  pg_hba:
+    - host replication replica 127.0.0.1/32 md5
+    - host replication replica {{ groups['servers'][1] }}/32 md5
+    - host replication replica {{ groups['servers'][2] }}/32 md5
+    - host all all 0.0.0.0/0 md5
+  users:
+    admin:
+      password: admin
+      options:
+        - createrole
+        - createdb
 postgresql:
   listen: 0.0.0.0:5432
   connect_address: {{ hostvars[inventory_hostname]['ansible_host'] }}:5432

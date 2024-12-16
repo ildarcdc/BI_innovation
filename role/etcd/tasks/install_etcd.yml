@@ -38,16 +38,7 @@
       chown -R etcd:etcd /var/lib/etcd/ /etc/etcd/
       chmod 0775 /var/lib/etcd/
     
-#  - name: Create a etcd service
-#    become: yes
-#    copy:
-#      src: ../templates/etcd.service.j2
-#      remote_src: False
-#      dest: /etc/systemd/system/etcd.service
-#      dest: /tmp/etcd.service
-#      owner: etcd
-#      group: etcd
-#      mode: 0775
+
       
   - name: Configure etcd
     become: yes

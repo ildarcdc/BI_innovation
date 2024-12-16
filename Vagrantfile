@@ -1,7 +1,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "eurolinux-vagrant/oracle-linux-8"
   config.vm.box_version = "8.10.5"
-  config.vm.disk :disk, size: "20GB", primary: true
+  config.vm.disk :disk, size: "100GB", primary: true
   config.vm.box_check_update = false
   config.vm.synced_folder ".", "/shared",
     owner: "root", group: "root"
@@ -11,8 +11,8 @@ Vagrant.configure("2") do |config|
     etcd.vm.network "public_network", ip: "192.168.1.100"
     etcd.vm.provider "virtualbox" do |vb|
       
-      vb.cpus = "2"
-      vb.memory = "512"
+      vb.cpus = "4"
+      vb.memory = "8192"
       vb.name = "etcd01"
 	  end
     etcd.vm.provision "shell", inline: <<-SHELL
@@ -39,8 +39,8 @@ Vagrant.configure("2") do |config|
 	pgsql.vm.network "public_network", ip: "192.168.1.101"
     pgsql.vm.provider "virtualbox" do |vb|
       
-      vb.cpus = "2"
-      vb.memory = "512"
+      vb.cpus = "4"
+      vb.memory = "8192"
       vb.name = "pgsql01"
 	  end
     pgsql.vm.provision "shell", inline: <<-SHELL
@@ -68,8 +68,8 @@ Vagrant.configure("2") do |config|
     pgsql.vm.network "public_network", ip: "192.168.1.102"
     pgsql.vm.provider "virtualbox" do |vb|
       
-      vb.cpus = "2"
-      vb.memory = "512"
+      vb.cpus = "4"
+      vb.memory = "8192"
       vb.name = "pgsql02"
 	  end
     pgsql.vm.provision "shell", inline: <<-SHELL
@@ -97,8 +97,8 @@ Vagrant.configure("2") do |config|
 	docker.vm.network "public_network", ip: "192.168.1.103"
 	docker.vm.provider "virtualbox" do |vb|
 	  
-	  vb.cpus = "2"
-	  vb.memory = "512"
+	  vb.cpus = "4"
+	  vb.memory = "8192"
 	  vb.name = "docker01"
 	  end
 	docker.vm.provision "shell", inline: <<-SHELL
@@ -123,8 +123,8 @@ Vagrant.configure("2") do |config|
 	  sed -i "s%ansible_user=root%ansible_user=ansible%g" "/etc/ansible/hosts"
 	  ansible-playbook /shared/test.yml --limit cluster
 	  timedatectl set-timezone Asia/Almaty
-	  
+	  ansible-playbook /shared/playbook.yml
 	  SHELL
   end
 end
-#host_key_checking = False
+
