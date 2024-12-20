@@ -124,7 +124,7 @@ Vagrant.configure("2") do |config|
 	  ansible-playbook /shared/docker_install_hosts.yml
 	  timedatectl set-timezone Asia/Almaty
 	  ansible-playbook /shared/playbook.yml
-      docker compose -f /shared/docker-compose.yml up -d
+	  docker compose -f /shared/docker-compose.yml up -d
 	  SHELL
   end
 end
