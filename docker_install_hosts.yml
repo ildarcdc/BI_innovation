@@ -1,0 +1,49 @@
+---
+- hosts: cluster
+  become: true
+  gather_facts: yes
+  tasks:
+    - name: Add Docker repo
+      remote_user: root
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docer-ce.repo
+      become: yes
+    #  update_cache: yes
+      tags:
+      - docker
+    - name: Enable Docker Edge repo
+      remote_user: root
+      ini_file:
+        dest: /etc/yum.repos.d/docer-ce.repo
+        section: 'docker-ce-edge'
+        option: enabled
+        value: 0
+      become: yes
+          
+    - name: Install docker
+      remote_user: root
+      dnf:
+        name: docker-ce
+        state: present
+        update_cache: yes
+      #notify: Start docker on boot
+      tags:
+        - docker
+          
+    - name: check docker is active
+      remote_user: root
+      service:
+        name: docker
+        state: started
+        enabled: yes
+          
+    - name: Add remote user to "docker" group
+      remote_user: root
+      user:
+        name: "root"
+        group: "docker"
+        append: yes
+      tags:
+        - docker
+      

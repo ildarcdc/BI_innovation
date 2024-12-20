@@ -1,0 +1,72 @@
+---        
+  - name: Create Node_exporter service
+    become: yes
+    shell: |
+      touch /etc/systemd/system/node-exporter.service
+      
+      
+  - name: Configure node_exporter
+    become: yes
+    template:
+      src: ../templates/node_exporter.j2
+      dest: /etc/systemd/system/node_exporter.service
+      mode: 0775
+
+  - name: Reload systemd daemon
+    become: yes
+    shell: |
+      systemctl daemon-reload    
+
+  - name: Enable and start etcd
+    become: yes
+    service:
+      name: node_exporter.service
+      enabled: true
+      state: started
+
+  - name: Wait for 30 seconds
+    pause:
+     seconds: 30
+     
+  - name: Create Postgres-exporter service
+    become: yes
+    shell: |
+      mkdir /opt/postgres_exporter
+      cd /opt/postgres_exporter
+      wget https://github.com/prometheus-community/postgres_exporter/releases/download/v0.12.0/postgres_exporter-0.12.0.linux-amd64.tar.gz
+      tar -zxvf postgres_exporter-0.12.0.linux-amd64.tar.gz 
+      mv postgres_exporter-0.12.0.linux-amd64 /usr/local/bin/
+      touch /etc/systemd/system/postgres-exporter.service
+      touch /opt/postgres_exporter/postgres_exporter.env
+      
+  - name: Create env. Postgres-exporter service
+    become: yes
+    template:
+      src: ../templates/postgres_exporter.env.j2
+      dest: /opt/postgres_exporter/postgres_exporter.env
+      mode: 0775
+      
+  - name: Configure postgres_exporter
+    become: yes
+    template:
+      src: ../templates/postgres_exporter.j2
+      dest: /etc/systemd/system/postgres_exporter.service
+      mode: 0775
+      
+  - name: Reload systemd daemon
+    become: yes
+    shell: |
+      systemctl daemon-reload    
+
+  - name: Enable and start etcd
+    become: yes
+    service:
+      name: postgres_exporter.service
+      enabled: true
+      state: started
+
+  - name: Wait for 30 seconds
+    pause:
+     seconds: 30
+     
+  

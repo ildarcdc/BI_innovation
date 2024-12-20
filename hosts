@@ -23,7 +23,7 @@ pgsql01 ansible_host=192.168.1.101
 pgsql02 ansible_host=192.168.1.102
 
 [pg_servers:vars]
-scope=db
+scope=pg_db
 
 [patroniname]
 pgsql01 db_name=db01
@@ -67,3 +67,6 @@ pgsql02 name=pgsql02
 
 [pg_pmm_cluster]
 pg-db
+
+[monitor]
+etcd01 name=etcd01

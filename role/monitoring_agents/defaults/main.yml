@@ -1,0 +1,6 @@
+etcd01: "192.168.1.100 etcd01"
+pgsql01: "192.168.1.101 pgsql01"
+pgsql02: "192.168.1.102 pgsql02"
+etcd_cluster_name: "etcd"
+etcd_cluster_token: "ildar"
+etcd_cluster_nodes: "etcd01=http://192.168.1.100:2380,pgsql01=http://192.168.1.101:2380,pgsql02=http://192.168.1.102:2380"

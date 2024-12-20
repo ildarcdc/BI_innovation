@@ -15,17 +15,27 @@ Requirements:
   
  * Create user "test_user" grant access to connect PG
  
-   - CREATE ROLE Read_Only_User WITH LOGIN PASSWORD 'password';
-   - GRANT Read_Only_User TO test_user;
+   - 'psql -c "ALTER USER postgres WITH PASSWORD ''password'';"'
+   - 'psql -c "CREATE USER test_user WITH PASSWORD ''password'' LOGIN;"'
+   - 
    
  * Create DB "test_db1" and grant access to test_user
  
    - CREATEDB test_db1;
-   - GRANT CONNECT ON DATABASE test_db1 TO test_user WITH GRANT OPTION;
+   - 'psql -c "CREATE DATABASE test_db1 WITH OWNER test_user;"'
+   
+ * Create User for monitoring: svc_monitoring
+ 
+   - 'psql -c "CREATE USER svc_monitoring WITH PASSWORD ''password'';"'
+   - 'psql -c "grant pg_monitor to svc_monitoring;"'
    
 _____________________________________________________________________________________
 
-- Прошу прощение за задержку Я не успел ещё по мониторингу 
-- Но я думаю что это решимо 
-- Спасибо !!!
+ * Checking availability PG
+ 
+  - 192.168.1.101 port: 5432
+  - 192.168.1.102 port: 6432
+  
+ * Grafana access: admin/admin
+  - Dashboards: /shared/Dashboard.json /shared/PG_Dashboard.json
 _____________________________________________________________________________________ 

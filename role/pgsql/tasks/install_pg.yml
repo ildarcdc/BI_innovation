@@ -11,9 +11,9 @@
       
   - name: Install pip packages
     become: yes
-    pip:
+    yum:
       name: 
-        - psycopg2==2.7.6
+        - python3-psycopg2
  
   - name: Install PG server
     become: true

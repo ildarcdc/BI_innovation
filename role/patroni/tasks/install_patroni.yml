@@ -1,7 +1,9 @@
   - name: Install patroni package
     become: yes
-    yum:
-      name: patroni
+    dnf:
+      name:
+      - patroni 
+      - patroni-etcd 
       state: present
 
 
@@ -46,7 +48,7 @@
   - name: Configure Patroni
     become: yes
     template:
-      src: templates/patroni.yml.j2
+      src: ../templates/patroni.yml.j2
       dest: /etc/patroni/patroni.yml
       owner: postgres
       group: postgres
