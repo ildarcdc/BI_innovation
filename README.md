@@ -34,8 +34,10 @@ ________________________________________________________________________________
  * Checking availability PG
  
   - 192.168.1.101 port: 5432
-  - 192.168.1.102 port: 6432
+  - 192.168.1.102 port: 5432
   
  * Grafana access: admin/admin
-  - Dashboards: /shared/Dashboard.json /shared/PG_Dashboard.json
+ 
+  - Dashboards Node Exporter: /shared/Dashboard.json 
+  - Dashboards Postgres Exporter: /shared/PG_Dashboard.json
 _____________________________________________________________________________________ 
