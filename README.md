@@ -36,7 +36,8 @@ ________________________________________________________________________________
   - 192.168.1.101 port: 5432
   - 192.168.1.102 port: 5432
   
- * Grafana access: admin/admin
+ * Grafana access: http://192.168.1.103:3000 admin/admin
+ * Prometheus access: http://192.168.1.103:9090/targets
  
   - Dashboards Node Exporter: /shared/Dashboard.json 
   - Dashboards Postgres Exporter: /shared/PG_Dashboard.json
