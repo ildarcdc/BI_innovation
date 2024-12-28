@@ -1,24 +1,24 @@
     - name: Set password for the default PostgreSQL user
       become: yes
-      become_user: postgres
-      shell: 'psql -c "ALTER USER postgres WITH PASSWORD ''password'';"'
+      become_user: "{{ pg_user }}"
+      shell: 'psql -c "ALTER USER "{{ pg_user }}" WITH PASSWORD ''password'';"'
 
     - name: Create a new user in PostgreSQL
       become: yes
-      become_user: postgres
-      shell: 'psql -c "CREATE USER test_user WITH PASSWORD ''password'' LOGIN;"'
+      become_user: "{{ pg_user }}"
+      shell: 'psql -c "CREATE USER "{{ db_user }}" WITH PASSWORD ''password'' LOGIN;"'
 
     - name: Create a new database in PostgreSQL
       become: yes
-      become_user: postgres
-      shell: 'psql -c "CREATE DATABASE test_db1 WITH OWNER test_user;"'
+      become_user: "{{ pg_user }}"
+      shell: 'psql -c "CREATE DATABASE "{{ db_name }}" WITH OWNER "{{ db_user }}" ;"'
 
     - name: Create a new user in PostgreSQL
       become: yes
-      become_user: postgres
-      shell: 'psql -c "CREATE USER svc_monitoring WITH PASSWORD ''password'';"'
+      become_user: "{{ pg_user }}"
+      shell: 'psql -c "CREATE USER "{{ monitoring_user }}" WITH PASSWORD ''password'';"'
       
     - name: Grant Role monitoring
       become: yes
-      become_user: postgres
-      shell: 'psql -c "grant pg_monitor to svc_monitoring;"'
+      become_user: "{{ pg_user }}"
+      shell: 'psql -c "grant pg_monitor to "{{ monitoring_user }}";"'

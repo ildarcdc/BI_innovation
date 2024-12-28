@@ -1,10 +1,4 @@
 ---        
-  - name: Create Node_exporter service
-    become: yes
-    shell: |
-      touch /etc/systemd/system/node-exporter.service
-      
-      
   - name: Configure node_exporter
     become: yes
     template:
@@ -35,8 +29,7 @@
       cd /opt/postgres_exporter
       wget https://github.com/prometheus-community/postgres_exporter/releases/download/v0.12.0/postgres_exporter-0.12.0.linux-amd64.tar.gz
       tar -zxvf postgres_exporter-0.12.0.linux-amd64.tar.gz 
-      mv postgres_exporter-0.12.0.linux-amd64 /usr/local/bin/
-      touch /etc/systemd/system/postgres-exporter.service
+      mv postgres_exporter-0.12.0.linux-amd64/postgres_exporter /usr/local/bin/
       touch /opt/postgres_exporter/postgres_exporter.env
       
   - name: Create env. Postgres-exporter service

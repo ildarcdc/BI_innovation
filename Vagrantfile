@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
     etcd.vm.provider "virtualbox" do |vb|
       
       vb.cpus = "4"
-      vb.memory = "8192"
+      vb.memory = "4096"
       vb.name = "etcd01"
 	  end
     etcd.vm.provision "shell", inline: <<-SHELL
@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
     pgsql.vm.provider "virtualbox" do |vb|
       
       vb.cpus = "4"
-      vb.memory = "8192"
+      vb.memory = "4096"
       vb.name = "pgsql01"
 	  end
     pgsql.vm.provision "shell", inline: <<-SHELL
@@ -69,7 +69,7 @@ Vagrant.configure("2") do |config|
     pgsql.vm.provider "virtualbox" do |vb|
       
       vb.cpus = "4"
-      vb.memory = "8192"
+      vb.memory = "4096"
       vb.name = "pgsql02"
 	  end
     pgsql.vm.provision "shell", inline: <<-SHELL
@@ -98,7 +98,7 @@ Vagrant.configure("2") do |config|
 	docker.vm.provider "virtualbox" do |vb|
 	  vb.gui = true
 	  vb.cpus = "4"
-	  vb.memory = "8192"
+	  vb.memory = "4096"
 	  vb.name = "docker01"
 	  end
 	docker.vm.provision "shell", inline: <<-SHELL
@@ -124,7 +124,7 @@ Vagrant.configure("2") do |config|
 	  ansible-playbook /shared/docker_install_hosts.yml
 	  timedatectl set-timezone Asia/Almaty
 	  ansible-playbook /shared/playbook.yml
-	  docker compose -f /shared/docker-compose.yml up -d
+	  docker compose -f /shared/docker-compose.yml up -d 
 	  SHELL
   end
 end

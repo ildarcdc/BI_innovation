@@ -21,7 +21,7 @@
 - hosts: pg_master
   roles:
     - { role: master_restart, tags: ["pg_master"] }
-    
+  
 - hosts: pg_slaves
   roles:
     - { role: slave_restart, tags: ["pg_slaves"] }
@@ -31,5 +31,10 @@
     - { role: monitoring_agents, tags: ["cluster"] }
     
 - hosts: pg_master
+  vars:
+    pg_user: postgres
+    monitoring_user: svc_monitoring
+    db_user: test_user
+    db_name: test_db1
   roles:
     - { role: create_pg_users, tags: ["pg_master"] }

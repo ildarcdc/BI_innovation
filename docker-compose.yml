@@ -12,7 +12,7 @@ services:
       - "9090:9090"
     volumes:
       - /shared/prometheus.yml:/etc/prometheus/prometheus.yml
-  
+
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
     ports:
